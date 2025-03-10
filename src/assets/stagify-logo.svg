@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Background with Gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4f46e5" />
+      <stop offset="100%" stop-color="#ec4899" />
+    </linearGradient>
+    <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.6" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Main Circle -->
+  <circle cx="100" cy="100" r="90" fill="url(#bgGradient)" />
+  
+  <!-- Stagify Icon - Representing stages/layers -->
+  <g>
+    <!-- Bottom layer/stage -->
+    <path d="M60,130 L140,130 L130,150 L70,150 Z" fill="#ffffff" opacity="0.7" />
+    
+    <!-- Middle layer/stage -->
+    <path d="M70,110 L130,110 L120,130 L80,130 Z" fill="#ffffff" opacity="0.8" />
+    
+    <!-- Top layer/stage -->
+    <path d="M80,90 L120,90 L110,110 L90,110 Z" fill="#ffffff" opacity="0.9" />
+    
+    <!-- Arrow pointing upward - representing deployment/production -->
+    <path d="M100,50 L120,80 L110,80 L110,90 L90,90 L90,80 L80,80 Z" fill="url(#accentGradient)" />
+  </g>
+  
+  <!-- Orbital rings representing continuous deployment -->
+  <ellipse cx="100" cy="100" rx="75" ry="30" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.3" transform="rotate(30, 100, 100)" />
+  <ellipse cx="100" cy="100" rx="75" ry="30" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.3" transform="rotate(60, 100, 100)" />
+  
+  <!-- Pulse Animation -->
+  <circle cx="100" cy="100" r="50" fill="none" stroke="#ffffff" stroke-width="1.5" opacity="0.5">
+    <animate attributeName="r" values="50;70;50" dur="3s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0.5;0;0.5" dur="3s" repeatCount="indefinite" />
+  </circle>
+</svg>

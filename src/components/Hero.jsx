@@ -49,7 +49,7 @@ const Hero = () => {
               </h1>
             </div>
             <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-xl">
-              Elevate your digital presence with cutting-edge web and mobile solutions powered by modern technologies and innovative design.  
+              We stage your requirements into production, delivering cutting-edge web and mobile solutions that fulfill your business needs with precision and innovation.
             </p>
             <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
               <a href="#services" className="btn-primary group" onClick={(e) => {

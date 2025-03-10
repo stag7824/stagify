@@ -30,7 +30,7 @@
   <circle cx="130" cy="150" r="5" fill="#ffffff" />
   <circle cx="130" cy="120" r="5" fill="#ffffff" />
   
-  <!-- Central T for TechServices -->
+  <!-- Central T for stagifys -->
   <path d="M85,80 L115,80 M100,80 L100,120" stroke="#ffffff" stroke-width="10" stroke-linecap="round" />
   
   <!-- Pulse Animation -->

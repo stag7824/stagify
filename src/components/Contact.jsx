@@ -72,7 +72,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <h4 className="font-semibold">Email</h4>
-                    <p className="mt-1">info@techservices.com</p>
+                    <p className="mt-1">info@stagifys.com</p>
                   </div>
                 </div>
                 <div className="flex items-start">

@@ -10,8 +10,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'logo192.png', 'logo512.png'],
       manifest: {
-        name: 'TechServices',
-        short_name: 'TechServices',
+        name: 'stagifys',
+        short_name: 'stagifys',
         description: 'Web & App Development Services',
         theme_color: '#4f46e5',
         background_color: '#ffffff',

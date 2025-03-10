@@ -42,8 +42,8 @@ const Header = () => {
     <header className="sticky top-0 z-50 bg-white dark:bg-gray-900 shadow-md transition-colors duration-300">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <div className="flex items-center space-x-2">
-          <img src="/src/assets/tech-logo.svg" alt="TechServices Logo" className="h-8 w-8" />
-          <h1 className="text-2xl font-bold text-primary">TechServices</h1>
+          <img src="/src/assets/stagify-logo.svg" alt="Stagify Logo" className="h-8 w-8" />
+          <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary animate-gradient-shift bg-[length:200%_auto]">Stagify</h1>
         </div>
         
         {/* Desktop Navigation */}
