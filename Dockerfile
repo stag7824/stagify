@@ -1,32 +1,27 @@
-# Stage 1: Build the application
-FROM node:20-alpine as build
-
-# Set working directory
+# Dockerfile
+FROM node:18-alpine AS builder
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
-
 # Install dependencies
-RUN npm ci
+COPY package*.json ./
+RUN npm install
 
-# Copy all files
+# Copy the rest of the source code and build the app
 COPY . .
-
-# Build the app
 RUN npm run build
 
-# Stage 2: Serve the application with Nginx
-FROM nginx:alpine
+FROM node:18-alpine
+WORKDIR /app
 
-# Copy built assets from the build stage
-COPY --from=build /app/dist /usr/share/nginx/html
+# Copy built assets from the builder stage
+COPY --from=builder /app . 
 
-# Copy custom nginx config if needed
-# COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+# Set environment variables for production and custom port
+ENV NODE_ENV=production
+ENV PORT=8080
 
-# Expose port 80
-EXPOSE 80
+# Expose port 8080
+EXPOSE 8080
 
-# Start Nginx server
-CMD ["nginx", "-g", "daemon off;"]
+# Start the application
+CMD ["npm", "run", "start"]

@@ -103,7 +103,7 @@ const Packages = () => {
               ></div>
               
               {pkg.popular && (
-                <div className="absolute -top-4 left-0 right-0 mx-auto w-max px-6 py-2 bg-gradient-to-r from-primary to-purple-600 text-white text-sm font-bold rounded-full shadow-lg z-20 whitespace-nowrap overflow-visible">
+                <div className="absolute -top-1 left-0 right-0 mx-auto w-max px-6 py-2 bg-gradient-to-r from-primary to-purple-600 text-white text-sm font-bold rounded-full shadow-lg z-20 whitespace-nowrap overflow-visible">
                   Most Popular
                 </div>
               )}
