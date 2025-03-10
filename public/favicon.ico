@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="logo-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4f46e5" />
+      <stop offset="50%" stop-color="#8b5cf6" />
+      <stop offset="100%" stop-color="#ec4899" />
+    </linearGradient>
+  </defs>
+  <path d="M32 4L10 16v32l22 12 22-12V16L32 4z" fill="url(#logo-gradient)" stroke="white" stroke-width="1" />
+  <path d="M32 12L18 20v24l14 8 14-8V20L32 12z" fill="none" stroke="white" stroke-width="1" />
+  <path d="M32 20L25 24v16l7 4 7-4V24L32 20z" fill="white" fill-opacity="0.2" stroke="white" stroke-width="0.5" />
+  <text x="32" y="36" font-family="monospace" font-size="10" font-weight="bold" text-anchor="middle" fill="white">TS</text>
+</svg>

@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <!-- Background Circle with Gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4f46e5" />
+      <stop offset="100%" stop-color="#8b5cf6" />
+    </linearGradient>
+    <linearGradient id="circuitGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.7" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.3" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Main Circle -->
+  <circle cx="100" cy="100" r="90" fill="url(#bgGradient)" />
+  
+  <!-- Circuit Board Pattern -->
+  <path d="M40,100 L70,100 M70,100 L70,60 M70,60 L110,60 M110,60 L110,100 M110,100 L160,100" 
+        stroke="url(#circuitGradient)" stroke-width="3" fill="none" />
+  <path d="M40,120 L90,120 M90,120 L90,150 M90,150 L130,150 M130,150 L130,120 M130,120 L160,120" 
+        stroke="url(#circuitGradient)" stroke-width="3" fill="none" />
+  
+  <!-- Connection Dots -->
+  <circle cx="70" cy="100" r="5" fill="#ffffff" />
+  <circle cx="70" cy="60" r="5" fill="#ffffff" />
+  <circle cx="110" cy="60" r="5" fill="#ffffff" />
+  <circle cx="110" cy="100" r="5" fill="#ffffff" />
+  <circle cx="90" cy="120" r="5" fill="#ffffff" />
+  <circle cx="90" cy="150" r="5" fill="#ffffff" />
+  <circle cx="130" cy="150" r="5" fill="#ffffff" />
+  <circle cx="130" cy="120" r="5" fill="#ffffff" />
+  
+  <!-- Central T for TechServices -->
+  <path d="M85,80 L115,80 M100,80 L100,120" stroke="#ffffff" stroke-width="10" stroke-linecap="round" />
+  
+  <!-- Pulse Animation -->
+  <circle cx="100" cy="100" r="50" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.5">
+    <animate attributeName="r" values="50;70;50" dur="3s" repeatCount="indefinite" />
+    <animate attributeName="opacity" values="0.5;0;0.5" dur="3s" repeatCount="indefinite" />
+  </circle>
+</svg>
