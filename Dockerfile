@@ -1,20 +1,35 @@
-# Use a lightweight Node.js base image
-FROM node:lts-alpine
+# Stage 1: Build the application
+FROM node:18-alpine AS builder
 
-# Set working directory
+# Set the working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json (or yarn.lock)
-COPY package*.json ./
+# Copy package.json and package-lock.json
+COPY package.json package-lock.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy your application code
+# Copy the rest of the application code
 COPY . .
 
-# Expose port
-EXPOSE 5173
+# Build the application
+RUN npm run build
 
-# Start the application 
-CMD [ "npm", "run", "dev" ]
+# Stage 2: Serve the application using a lightweight server
+FROM node:18-alpine
+
+# Install 'serve' to serve the build directory
+RUN npm install -g serve
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the build files from the previous stage
+COPY --from=builder /app/dist ./dist
+
+# Set the default command to serve the application
+CMD ["serve", "-s", "dist", "-l", "3000"]
+
+# Expose port 3000
+EXPOSE 3000
