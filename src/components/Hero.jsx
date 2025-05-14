@@ -2,7 +2,8 @@ import { useContext, useEffect, useRef } from 'react';
 import { ThemeContext } from '../context/ThemeContext';
 
 const Hero = () => {
-  const { currentTheme } = useContext(ThemeContext);
+  // Using context for theme-aware styling if needed in the future
+  useContext(ThemeContext);
   const heroRef = useRef(null);
   
   useEffect(() => {
@@ -49,7 +50,7 @@ const Hero = () => {
               </h1>
             </div>
             <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-xl">
-              We stage your requirements into production, delivering cutting-edge web and mobile solutions that fulfill your business needs with precision and innovation.
+              We turn your ideas into high-impact websites and mobile apps that help your business succeed online and attract more customers.
             </p>
             <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
               <a href="#services" className="btn-primary group" onClick={(e) => {

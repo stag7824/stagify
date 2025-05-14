@@ -3,7 +3,8 @@ import { services } from '../data/services';
 import { ThemeContext } from '../context/ThemeContext';
 
 const Services = () => {
-  const { currentTheme } = useContext(ThemeContext);
+  // Using context for theme-aware styling if needed in the future
+  useContext(ThemeContext);
 
   return (
     <section id="services" className="py-20 bg-white dark:bg-gray-900 transition-colors duration-300">
@@ -13,7 +14,7 @@ const Services = () => {
             Our <span className="text-primary">Services</span>
           </h2>
           <p className="text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-            We offer a comprehensive range of technical and marketing services to help your business succeed in the digital world.
+            We provide end-to-end digital solutions — from website design to mobile apps — to help your business grow and reach more customers.
           </p>
         </div>
 

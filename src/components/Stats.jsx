@@ -4,6 +4,8 @@ import { ThemeContext } from '../context/ThemeContext';
 
 
 const Stats = () => {
+  const { currentTheme } = useContext(ThemeContext);
+  
   const getHeadingAccentClass = () => {
     if (currentTheme === 'purple') {
       return 'text-pink-500'; // More contrasting pink for purple theme
@@ -12,8 +14,6 @@ const Stats = () => {
     }
     return 'text-primary'; // Default for light and dark themes
   };
-
-  const { currentTheme } = useContext(ThemeContext);
 
   return (
     <section id="stats" className="py-16 bg-primary bg-opacity-10 dark:bg-opacity-5 transition-colors duration-300">
@@ -39,7 +39,7 @@ const Stats = () => {
                   data-target={parseInt(stat.value.replace(/[^0-9]/g, ''))}
                   data-duration="2000"
                 >
-                  0
+                  {stat.value.replace(/\+/g, '')}
                 </span>
                 {stat.value.includes('+') && <span className="text-4xl md:text-5xl font-bold text-primary">+</span>}
               </div>

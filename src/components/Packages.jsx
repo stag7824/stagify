@@ -3,23 +3,24 @@ import { ThemeContext } from '../context/ThemeContext';
 import PackageForm from './PackageForm';
 
 const Packages = () => {
-  const { currentTheme } = useContext(ThemeContext);
+  // Using context for theme-aware styling if needed in the future
+  useContext(ThemeContext);
   const [hoveredPackage, setHoveredPackage] = useState(null);
   const [selectedPackage, setSelectedPackage] = useState(null);
 
   const packages = [
     {
       id: 'starter',
-      name: 'Starter',
-      description: 'Perfect for small businesses and startups looking to establish their digital presence.',
+      name: 'Starter Plan',
+      description: 'Best for small businesses and startups launching online for the first time.',
       price: '$1,499',
       features: [
-        'Responsive Website Design',
-        'Up to 5 Pages',
-        'Basic SEO Setup',
-        'Contact Form Integration',
-        'Mobile Optimization',
-        '1 Month Support',
+        'Mobile-friendly website that looks great on any device',
+        'Up to 5 pages of custom content',
+        'Basic SEO setup so customers can find you on Google',
+        'Contact form so visitors can easily reach you',
+        'Optimization for fast loading on mobile devices',
+        '1 month of technical support after launch',
       ],
       cta: 'Get Started',
       popular: false,
@@ -27,18 +28,18 @@ const Packages = () => {
     },
     {
       id: 'professional',
-      name: 'Professional',
-      description: 'Comprehensive solution for growing businesses with advanced functionality needs.',
+      name: 'Professional Plan',
+      description: 'Comprehensive solution for growing businesses that need more features and functionality.',
       price: '$3,999',
       features: [
-        'Custom Web Application',
-        'Progressive Web App (PWA)',
-        'CMS Integration',
-        'E-commerce Functionality',
-        'Advanced Analytics',
-        'User Authentication',
-        'Payment Gateway Integration',
-        '3 Months Support',
+        'Custom interactive website with advanced features',
+        'Works offline and loads fast like a mobile app',
+        'Content management system so you can update your site',
+        'Online store with product listings and shopping cart',
+        'Detailed visitor analytics to track performance',
+        'Secure customer login and account features',
+        'Payment gateway setup for secure online sales',
+        '3 months of priority support and maintenance',
       ],
       cta: 'Go Professional',
       popular: true,
@@ -46,20 +47,20 @@ const Packages = () => {
     },
     {
       id: 'enterprise',
-      name: 'Enterprise',
-      description: 'Full-scale digital transformation with custom web and mobile app development.',
+      name: 'Enterprise Plan',
+      description: 'Full-scale digital transformation with both website and mobile apps for maximum reach.',
       price: '$8,999+',
       features: [
-        'Custom Web & Mobile Apps',
-        'Native iOS & Android Apps',
-        'Advanced Backend Architecture',
-        'API Development & Integration',
-        'Database Design & Optimization',
-        'User Testing & QA',
-        'Scalable Cloud Infrastructure',
-        'CI/CD Pipeline Setup',
-        '6 Months Priority Support',
-        'Dedicated Project Manager',
+        'Custom website and mobile apps working together',
+        'Apps for both iPhone and Android devices',
+        'Powerful backend system for handling complex processes',
+        'Connections to your existing business software',
+        'Optimized database for speed and security',
+        'Thorough testing to ensure everything works perfectly',
+        'Enterprise-grade hosting that grows with your business',
+        'Automated updates and maintenance system',
+        '6 months of priority support with quick response times',
+        'Your own dedicated project manager throughout',
       ],
       cta: 'Contact Us',
       popular: false,

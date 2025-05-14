@@ -4,14 +4,14 @@ export const services = [
   {
     id: 1,
     title: 'Frontend Development',
-    description: 'Cutting-edge web interfaces built with modern frameworks that deliver exceptional user experiences.',
+    description: 'Beautiful, mobile-friendly websites built with the latest technology to engage your customers.',
     icon: 'code',
     features: [
-      'React, Vue & Next.js expertise',
-      'Responsive & adaptive design',
-      'Interactive UI animations',
-      'Performance optimization',
-      'Web3 integration capabilities'
+      'Fast, interactive websites',
+      'Mobile-friendly design for all devices',
+      'Smooth, engaging animations',
+      'Fast-loading pages that keep visitors engaged',
+      'Modern design that stands out from competitors'
     ],
     caseStudies: [
       {
@@ -27,14 +27,14 @@ export const services = [
   {
     id: 2,
     title: 'Mobile App Development',
-    description: 'Native and cross-platform mobile applications with seamless performance and stunning interfaces.',
+    description: 'Custom mobile apps that help you reach customers on their phones and provide a seamless experience.',
     icon: 'smartphone',
     features: [
-      'Native iOS & Android development',
-      'React Native & Flutter expertise',
-      'Offline-first architecture',
-      'Push notification systems',
-      'App store optimization'
+      'Apps for both iPhone and Android devices',
+      'Cost-effective apps that work across all platforms',
+      'Apps that work without an internet connection',
+      'Customer engagement through notifications',
+      'Strategies to increase app downloads'
     ],
     caseStudies: [
       {
@@ -50,14 +50,14 @@ export const services = [
   {
     id: 3,
     title: 'Backend Development',
-    description: 'Robust, scalable server architectures that power high-performance web and mobile applications.',
+    description: 'Powerful systems behind your website that ensure it runs smoothly, securely, and can handle growth.',
     icon: 'edit',
     features: [
-      'Node.js & Python expertise',
-      'Microservices architecture',
-      'Database design & optimization',
-      'API development & integration',
-      'Cloud infrastructure (AWS, GCP, Azure)'
+      'Reliable server technology',
+      'Scalable systems that grow with your business',
+      'Fast and secure data storage solutions',
+      'Connections with other business systems',
+      'Cloud hosting for reliability and performance'
     ],
     caseStudies: [
       {
@@ -73,14 +73,14 @@ export const services = [
   {
     id: 4,
     title: 'Full-Stack Development',
-    description: 'End-to-end development solutions that seamlessly integrate frontend, backend, and infrastructure.',
+    description: 'Complete website and app solutions that handle everything from design to data, giving you a seamless experience.',
     icon: 'share',
     features: [
-      'Full application lifecycle management',
-      'Serverless architecture',
-      'DevOps & CI/CD implementation',
-      'Security best practices',
-      'Scalable infrastructure design'
+      'End-to-end project management',
+      'Cost-effective cloud solutions',
+      'Automated testing and deployment',
+      'Enterprise-grade security protection',
+      'Systems built for long-term growth'
     ],
     caseStudies: [
       {
@@ -96,14 +96,14 @@ export const services = [
   {
     id: 5,
     title: 'UI/UX Design',
-    description: 'Immersive digital experiences with cutting-edge design that captivates users and drives engagement.',
+    description: 'User-friendly designs that make your website easy to navigate and visually appealing to keep customers coming back.',
     icon: 'palette',
     features: [
-      'User interface design',
-      'Wireframing and prototyping',
-      'Design systems creation',
-      'Usability testing',
-      'Brand identity development'
+      'Attractive, intuitive website designs',
+      'Visual mockups to preview your site',
+      'Consistent design elements across your brand',
+      'User testing to ensure ease-of-use',
+      'Complete brand identity development'
     ],
     caseStudies: [
       {
