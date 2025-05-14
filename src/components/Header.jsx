@@ -2,7 +2,7 @@ import { useContext, useState, useEffect } from 'react';
 import { ThemeContext } from '../context/ThemeContext';
 
 const Header = () => {
-  const { currentTheme, setCurrentTheme, themes } = useContext(ThemeContext);
+  const { currentTheme, setCurrentTheme, themes, effectiveTheme, SYSTEM_THEME, isSystemTheme } = useContext(ThemeContext);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
   // Close mobile menu when resizing to desktop
@@ -16,27 +16,6 @@ const Header = () => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, [mobileMenuOpen]);
-  
-  // Detect system color scheme preference
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    
-    const handleChange = (e) => {
-      const savedTheme = localStorage.getItem('theme');
-      // Only auto-switch if user hasn't explicitly set a theme
-      if (!savedTheme) {
-        setCurrentTheme(e.matches ? 'dark' : 'light');
-      }
-    };
-    
-    // Set initial theme based on system preference if no saved preference
-    if (!localStorage.getItem('theme')) {
-      handleChange(mediaQuery);
-    }
-    
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
-  }, [setCurrentTheme]);
 
   return (
     <header className="sticky top-0 z-50 bg-white dark:bg-gray-900 shadow-md transition-colors duration-300">
@@ -118,18 +97,43 @@ const Header = () => {
         <div className="flex items-center space-x-4">
           <div className="relative group">
             <button 
-              onClick={() => setCurrentTheme(currentTheme === 'light' ? 'dark' : 'light')}
+              onClick={() => setCurrentTheme(currentTheme === SYSTEM_THEME ? (effectiveTheme === 'light' ? 'dark' : 'light') : (currentTheme === 'light' ? 'dark' : 'light'))}
               className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
               aria-label="Theme settings"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-slate-700 dark:text-gray-300" viewBox="0 0 20 20" fill="currentColor">
-                {currentTheme === 'light' && <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" />}
-                {currentTheme === 'dark' && <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />}
-                {currentTheme === 'purple' && <path fillRule="evenodd" d="M4 2a2 2 0 00-2 2v11a3 3 0 106 0V4a2 2 0 00-2-2H4zm1 14a1 1 0 100-2 1 1 0 000 2zm5-1.757l4.9-4.9a2 2 0 000-2.828L13.485 5.1a2 2 0 00-2.828 0L10 5.757v8.486zM16 18H9.071l6-6H16a2 2 0 012 2v2a2 2 0 01-2 2z" clipRule="evenodd" />}
-                {currentTheme === 'green' && <path fillRule="evenodd" d="M4.382 4.968a1 1 0 011.414 0l4.243 4.243a1 1 0 01-1.414 1.414L4.382 6.382a1 1 0 010-1.414z" clipRule="evenodd" />}
+                {/* For system theme, show icon based on the effective theme */}
+                {isSystemTheme && effectiveTheme === 'light' && (
+                  <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" />
+                )}
+                {isSystemTheme && effectiveTheme === 'dark' && (
+                  <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />
+                )}
+                {/* For manually selected themes */}
+                {!isSystemTheme && currentTheme === 'light' && <path fillRule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clipRule="evenodd" />}
+                {!isSystemTheme && currentTheme === 'dark' && <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z" />}
+                {!isSystemTheme && currentTheme === 'purple' && <path fillRule="evenodd" d="M4 2a2 2 0 00-2 2v11a3 3 0 106 0V4a2 2 0 00-2-2H4zm1 14a1 1 0 100-2 1 1 0 000 2zm5-1.757l4.9-4.9a2 2 0 000-2.828L13.485 5.1a2 2 0 00-2.828 0L10 5.757v8.486zM16 18H9.071l6-6H16a2 2 0 012 2v2a2 2 0 01-2 2z" clipRule="evenodd" />}
+                {!isSystemTheme && currentTheme === 'green' && <path fillRule="evenodd" d="M4.382 4.968a1 1 0 011.414 0l4.243 4.243a1 1 0 01-1.414 1.414L4.382 6.382a1 1 0 010-1.414z" clipRule="evenodd" />}
               </svg>
             </button>
-            <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 ease-in-out">
+            <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-md shadow-lg py-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 ease-in-out z-20">
+              {/* System Theme Option */}
+              <button
+                key={SYSTEM_THEME}
+                onClick={() => setCurrentTheme(SYSTEM_THEME)}
+                className={`block w-full text-left px-4 py-2 text-sm ${isSystemTheme ? 'bg-gray-100 dark:bg-gray-700 text-primary' : 'text-slate-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'}`}
+              >
+                <div className="flex items-center">
+                  <span className="mr-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M3 5a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2h-2.22l.123.489.804.804A1 1 0 0113 18H7a1 1 0 01-.707-1.707l.804-.804L7.22 15H5a2 2 0 01-2-2V5zm5.771 7H5V5h10v7H8.771z" clipRule="evenodd" />
+                    </svg>
+                  </span>
+                  System Default {isSystemTheme && <span className="ml-1 text-xs text-gray-500 dark:text-gray-400">({effectiveTheme})</span>}
+                </div>
+              </button>
+              
+              {/* Other Theme Options */}
               {themes.map((theme) => (
                 <button
                   key={theme.id}
