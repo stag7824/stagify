@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { termsAndConditions, privacyPolicy } from '../data/termsAndConditions';
+import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
+import axios from 'axios';
 
 const PackageForm = ({ packageData, onClose, onSubmit }) => {
   const [formData, setFormData] = useState({
@@ -15,6 +17,9 @@ const PackageForm = ({ packageData, onClose, onSubmit }) => {
 
   const [errors, setErrors] = useState({});
   const [step, setStep] = useState(1); // 1: Form, 2: Terms, 3: Confirmation
+  const [loading, setLoading] = useState(false); // Loading state for PayPal
+  const [paypalOrderId, setPaypalOrderId] = useState(null); // PayPal order ID
+  const [showPayPal, setShowPayPal] = useState(false); // Toggle PayPal buttons
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -66,13 +71,32 @@ const PackageForm = ({ packageData, onClose, onSubmit }) => {
     setStep(step - 1);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (step === 3) {
-      // Submit the form data
-      onSubmit(formData);
-      // In a real app, this would redirect to payment gateway
-      window.alert('Thank you for your submission! You will be redirected to our payment gateway.');
+      try {
+        setLoading(true);
+        
+        // Create a PayPal order through your backend
+        const response = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/paypal/create-order`, {
+          amount: parseFloat(formData.budget.replace(/[^0-9.]/g, '')), // Convert price string to number
+          formData,
+          packageDetails: {
+            name: packageData?.name,
+            price: packageData?.price
+          }
+        });
+        
+        // Store the order ID and show the PayPal buttons
+        setPaypalOrderId(response.data.id);
+        setShowPayPal(true);
+        
+      } catch (error) {
+        console.error('Error creating PayPal order:', error);
+        alert('Error creating payment. Please try again.');
+      } finally {
+        setLoading(false);
+      }
     } else {
       handleNextStep();
     }
@@ -321,6 +345,58 @@ const PackageForm = ({ packageData, onClose, onSubmit }) => {
                     By clicking "Submit & Proceed to Payment", you confirm that all the information provided is correct and you agree to proceed with the selected package.
                   </p>
                 </div>
+                
+                {showPayPal && paypalOrderId && (
+                  <div className="mt-6 border-t border-gray-200 dark:border-gray-600 pt-6">
+                    <h4 className="font-medium text-gray-900 dark:text-white mb-4">Complete Payment with PayPal</h4>
+                    
+                    {loading ? (
+                      <div className="flex justify-center items-center py-4">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                        <span className="ml-2 text-gray-600 dark:text-gray-300">Processing...</span>
+                      </div>
+                    ) : (
+                      <PayPalButtons
+                        style={{ layout: "vertical" }}
+                        createOrder={() => paypalOrderId}
+                        onApprove={async (data, actions) => {
+                          setLoading(true);
+                          try {
+                            // Capture the funds from the transaction
+                            const response = await axios.post(
+                              `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/paypal/capture-order`,
+                              {
+                                orderID: data.orderID,
+                                formData,
+                                packageDetails: {
+                                  name: packageData?.name,
+                                  price: packageData?.price
+                                }
+                              }
+                            );
+                            
+                            // Call the onSubmit function with form data and payment details
+                            if (onSubmit) {
+                              onSubmit({
+                                ...formData,
+                                paymentDetails: response.data
+                              });
+                            }
+                            
+                            // Show success message and close form
+                            alert("Payment successful! Thank you for your order.");
+                            onClose();
+                          } catch (error) {
+                            console.error("Error capturing PayPal order:", error);
+                            alert("There was a problem with your payment. Please try again.");
+                          } finally {
+                            setLoading(false);
+                          }
+                        }}
+                      />
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -338,11 +414,14 @@ const PackageForm = ({ packageData, onClose, onSubmit }) => {
             
             <button
               type="submit"
-              className={`px-6 py-2 rounded-lg text-white font-medium transition-colors ${step === 3 ? 'bg-green-600 hover:bg-green-700' : 'bg-primary hover:bg-primary-dark'}`}
+              disabled={step === 3 && showPayPal}
+              className={`px-6 py-2 rounded-lg text-white font-medium transition-colors ${
+                step === 3 ? 'bg-green-600 hover:bg-green-700' : 'bg-primary hover:bg-primary-dark'
+              } ${(step === 3 && showPayPal) ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               {step === 1 && 'Continue to Terms'}
               {step === 2 && 'Review Information'}
-              {step === 3 && 'Submit & Proceed to Payment'}
+              {step === 3 && (showPayPal ? 'Processing Payment...' : 'Submit & Proceed to Payment')}
             </button>
           </div>
         </form>

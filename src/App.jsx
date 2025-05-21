@@ -1,6 +1,7 @@
 import './App.css'
 import { ThemeProvider } from './context/ThemeContext'
 import { useEffect } from 'react'
+import { PayPalScriptProvider } from '@paypal/react-paypal-js'
 import Header from './components/Header'
 import Hero from './components/Hero'
 import Services from './components/Services'
@@ -31,26 +32,35 @@ function App() {
     };
   }, []);
   
+  // PayPal configuration options
+  const paypalOptions = {
+    "client-id": import.meta.env.VITE_PAYPAL_CLIENT_ID || "test", // Use environment variable or default to "test"
+    currency: "USD",
+    intent: "capture"
+  };
+
   return (
     <ThemeProvider>
-      <div className="min-h-screen flex flex-col dark:bg-gray-900 transition-colors duration-300">
-        <Header />
-        <main>
-          <Hero />
-          <Services />
-          <Packages />
-          <TechStack />
-          <Testimonials />
-          <Stats />
-          <Contact />
-        </main>
-        <footer className="bg-gray-900 dark:bg-gray-950 text-white py-8">
-          <div className="container mx-auto px-4 text-center">
-            <p>&copy; {new Date().getFullYear()} Stagify. All rights reserved.</p>
-            <p className="mt-2 text-gray-400 text-sm">Turning your ideas into high-impact digital solutions</p>
-          </div>
-        </footer>
-      </div>
+      <PayPalScriptProvider options={paypalOptions}>
+        <div className="min-h-screen flex flex-col dark:bg-gray-900 transition-colors duration-300">
+          <Header />
+          <main>
+            <Hero />
+            <Services />
+            <Packages />
+            <TechStack />
+            <Testimonials />
+            <Stats />
+            <Contact />
+          </main>
+          <footer className="bg-gray-900 dark:bg-gray-950 text-white py-8">
+            <div className="container mx-auto px-4 text-center">
+              <p>&copy; {new Date().getFullYear()} Stagify. All rights reserved.</p>
+              <p className="mt-2 text-gray-400 text-sm">Turning your ideas into high-impact digital solutions</p>
+            </div>
+          </footer>
+        </div>
+      </PayPalScriptProvider>
     </ThemeProvider>
   )
 }
