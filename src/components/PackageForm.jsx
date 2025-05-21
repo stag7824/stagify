@@ -78,7 +78,7 @@ const PackageForm = ({ packageData, onClose, onSubmit }) => {
         setLoading(true);
         
         // Create a PayPal order through your backend
-        const response = await axios.post(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/paypal/create-order`, {
+        const response = await axios.post(`${import.meta.env.VITE_BACKEND_API_URL || 'http://localhost:3000'}/paypal/create-order`, {
           amount: parseFloat(formData.budget.replace(/[^0-9.]/g, '')), // Convert price string to number
           formData,
           packageDetails: {
@@ -364,7 +364,7 @@ const PackageForm = ({ packageData, onClose, onSubmit }) => {
                           try {
                             // Capture the funds from the transaction
                             const response = await axios.post(
-                              `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/paypal/capture-order`,
+                              `${import.meta.env.VITE_BACKEND_API_URL || 'http://localhost:3000'}/paypal/capture-order`,
                               {
                                 orderID: data.orderID,
                                 formData,
