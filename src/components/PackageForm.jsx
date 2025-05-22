@@ -2,6 +2,61 @@ import { useState } from 'react';
 import { termsAndConditions, privacyPolicy } from '../data/termsAndConditions';
 import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
 import axios from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
+
+// PayPal Loader Animation Component
+const PayPalLoader = () => (
+  <div className="flex flex-col justify-center items-center py-8">
+    <div className="relative h-20 w-20">
+      {/* Outer spinning ring */}
+      <div className="absolute inset-0 border-4 border-t-primary border-r-secondary border-b-primary border-l-secondary rounded-full animate-spin"></div>
+      {/* Inner pulsing circle */}
+      <div className="absolute inset-4 bg-gradient-to-r from-primary to-secondary rounded-full animate-pulse-slow opacity-70"></div>
+      {/* Center dot */}
+      <div className="absolute inset-8 bg-white dark:bg-gray-800 rounded-full shadow-inner"></div>
+    </div>
+    <p className="mt-6 text-gray-700 dark:text-gray-300 font-medium">Loading PayPal...</p>
+    <p className="text-sm text-gray-500 dark:text-gray-400">Please wait while we connect to PayPal's secure payment system</p>
+  </div>
+);
+
+// Success Message Component
+const SuccessMessage = ({ packageName, onClose }) => (
+  <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-2xl border border-primary/20 animate-fade-in-up">
+    <div className="flex flex-col items-center text-center">
+      {/* Success checkmark with animation */}
+      <div className="w-24 h-24 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mb-6 scale-in-center">
+        <svg className="w-14 h-14 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" className="animate-draw-check"></path>
+        </svg>
+      </div>
+      
+      <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Payment Successful!</h2>
+      
+      <div className="bg-gradient-to-r from-primary to-secondary p-px rounded-lg w-24 mb-4">
+        <div className="h-1 bg-primary rounded-lg"></div>
+      </div>
+      
+      <p className="text-gray-600 dark:text-gray-300 mb-6 text-lg">
+        Thank you for purchasing the <span className="font-semibold text-primary">{packageName}</span> package. We've received your payment and will be in touch shortly.
+      </p>
+      
+      <div className="w-full p-5 bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/10 dark:to-blue-900/10 rounded-lg mb-7 border border-green-100 dark:border-green-800/30">
+        <p className="text-sm text-gray-600 dark:text-gray-400">
+          <span className="block text-green-600 dark:text-green-400 font-medium mb-1">Next Steps</span>
+          A confirmation email with your invoice and further instructions has been sent to your email address. Our team will contact you within 24 hours.
+        </p>
+      </div>
+      
+      <button
+        onClick={onClose}
+        className="px-10 py-3 bg-gradient-to-r from-primary to-secondary text-white font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+      >
+        Continue
+      </button>
+    </div>
+  </div>
+);
 
 const PackageForm = ({ packageData, onClose, onSubmit }) => {
   const [formData, setFormData] = useState({
@@ -20,6 +75,10 @@ const PackageForm = ({ packageData, onClose, onSubmit }) => {
   const [loading, setLoading] = useState(false); // Loading state for PayPal
   const [paypalOrderId, setPaypalOrderId] = useState(null); // PayPal order ID
   const [showPayPal, setShowPayPal] = useState(false); // Toggle PayPal buttons
+  const [paymentSuccess, setPaymentSuccess] = useState(false); // Payment success state
+
+  // Get PayPal script loading status
+  const [{ isPending }] = usePayPalScriptReducer();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -93,7 +152,16 @@ const PackageForm = ({ packageData, onClose, onSubmit }) => {
         
       } catch (error) {
         console.error('Error creating PayPal order:', error);
-        alert('Error creating payment. Please try again.');
+        toast.error('Error creating payment. Please try again.', {
+          duration: 6000,
+          position: "top-center",
+          style: {
+            background: "#ef4444",
+            color: "#fff",
+            fontWeight: "bold"
+          },
+          icon: "❌"
+        });
       } finally {
         setLoading(false);
       }
@@ -102,9 +170,44 @@ const PackageForm = ({ packageData, onClose, onSubmit }) => {
     }
   };
 
+  // Handle showing the success message when payment is successful 
+  if (paymentSuccess) {
+    // Force a toast notification here as well for redundancy
+    setTimeout(() => {
+      toast.success("Payment completed successfully!");
+    }, 200);
+    
+    return (
+      <div 
+        className="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex justify-center items-center z-[9999] p-4"
+        // This prevents clicks outside the modal from accidentally closing it
+        onClick={(e) => e.stopPropagation()} 
+      >
+        <SuccessMessage 
+          packageName={packageData?.name}
+          onClose={() => {
+            setPaymentSuccess(false);
+            onClose();
+          }}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex justify-center items-center z-50 p-4 overflow-y-auto">
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto relative animate-fade-in-up">
+        {/* Toast container with higher z-index to ensure visibility */}
+        <Toaster 
+          position="top-center" 
+          toastOptions={{ 
+            duration: 4000,
+            style: {
+              zIndex: 10000,
+              boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)'
+            }
+          }} 
+        />
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto relative animate-fade-in-up">
         {/* Close button */}
         <button 
           onClick={onClose}
@@ -346,20 +449,24 @@ const PackageForm = ({ packageData, onClose, onSubmit }) => {
                   </p>
                 </div>
                 
+                {loading && !showPayPal && (
+                  <div className="mt-6 border-t border-gray-200 dark:border-gray-600 pt-6">
+                    <h4 className="font-medium text-gray-900 dark:text-white mb-4">Preparing Payment</h4>
+                    <PayPalLoader />
+                  </div>
+                )}
+                
                 {showPayPal && paypalOrderId && (
                   <div className="mt-6 border-t border-gray-200 dark:border-gray-600 pt-6">
                     <h4 className="font-medium text-gray-900 dark:text-white mb-4">Complete Payment with PayPal</h4>
                     
-                    {loading ? (
-                      <div className="flex justify-center items-center py-4">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                        <span className="ml-2 text-gray-600 dark:text-gray-300">Processing...</span>
-                      </div>
+                    {isPending ? (
+                      <PayPalLoader />
                     ) : (
                       <PayPalButtons
                         style={{ layout: "vertical" }}
                         createOrder={() => paypalOrderId}
-                        onApprove={async (data, actions) => {
+                        onApprove={async (data) => {
                           setLoading(true);
                           try {
                             // Capture the funds from the transaction
@@ -383,13 +490,38 @@ const PackageForm = ({ packageData, onClose, onSubmit }) => {
                               });
                             }
                             
-                            // Show success message and close form
-                            alert("Payment successful! Thank you for your order.");
-                            onClose();
+                            // Show success message
+                            setLoading(false);
+                            
+                            // Set payment success state and show toast
+                            setPaymentSuccess(true);
+                            
+                            // Display toast notification
+                            toast.success("Payment completed successfully!", {
+                              duration: 6000,
+                              position: "top-center",
+                              style: {
+                                background: "#10b981",
+                                color: "#fff",
+                                fontWeight: "bold"
+                              },
+                              icon: "🎉"
+                            });
+                            
+                            // Log to make sure this is being triggered
+                            console.log("Payment successful, showing success message");
                           } catch (error) {
                             console.error("Error capturing PayPal order:", error);
-                            alert("There was a problem with your payment. Please try again.");
-                          } finally {
+                            toast.error("There was a problem with your payment. Please try again.", {
+                              duration: 6000,
+                              position: "top-center",
+                              style: {
+                                background: "#ef4444",
+                                color: "#fff",
+                                fontWeight: "bold"
+                              },
+                              icon: "❌"
+                            });
                             setLoading(false);
                           }
                         }}
@@ -414,14 +546,14 @@ const PackageForm = ({ packageData, onClose, onSubmit }) => {
             
             <button
               type="submit"
-              disabled={step === 3 && showPayPal}
+              disabled={step === 3 && (loading || showPayPal)}
               className={`px-6 py-2 rounded-lg text-white font-medium transition-colors ${
                 step === 3 ? 'bg-green-600 hover:bg-green-700' : 'bg-primary hover:bg-primary-dark'
-              } ${(step === 3 && showPayPal) ? 'opacity-50 cursor-not-allowed' : ''}`}
+              } ${(step === 3 && (loading || showPayPal)) ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               {step === 1 && 'Continue to Terms'}
               {step === 2 && 'Review Information'}
-              {step === 3 && (showPayPal ? 'Processing Payment...' : 'Submit & Proceed to Payment')}
+              {step === 3 && (loading ? 'Processing...' : showPayPal ? 'Payment in Progress...' : 'Submit & Proceed to Payment')}
             </button>
           </div>
         </form>

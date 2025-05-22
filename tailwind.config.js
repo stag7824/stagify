@@ -60,6 +60,23 @@ export default {
         'spin-slow': 'spin 15s linear infinite',
         'bounce-slow': 'bounce 3s infinite',
         'glow': 'glow 2s ease-in-out infinite',
+        'draw-check': 'drawCheck 1s ease-in-out forwards',
+        'fade-in-up': 'fadeInUp 0.6s ease-out forwards',
+        'scale-in-center': 'scaleInCenter 0.5s ease-out forwards',
+      },
+      keyframes: {
+        drawCheck: {
+          '0%': { strokeDasharray: '90', strokeDashoffset: '90' },
+          '100%': { strokeDasharray: '90', strokeDashoffset: '0' }
+        },
+        fadeInUp: {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' }
+        },
+        scaleInCenter: {
+          '0%': { transform: 'scale(0.8)', opacity: '0' },
+          '100%': { transform: 'scale(1)', opacity: '1' }
+        }
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
