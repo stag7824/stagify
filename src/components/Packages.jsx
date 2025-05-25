@@ -165,7 +165,11 @@ const Packages = () => {
           onSubmit={(formData) => {
             console.log('Form submitted:', formData);
             // Here you would typically send the data to your backend
-            setSelectedPackage(null);
+            
+            // Only close the form if it's not a payment success (step 4)
+            if (!formData.preventClose) {
+              setSelectedPackage(null);
+            }
           }} 
         />
       )}
