@@ -1,10 +1,12 @@
 import { useContext, useState } from 'react';
 import { ThemeContext } from '../context/ThemeContext';
+import toast, { Toaster } from 'react-hot-toast';
 
 const Contact = () => {
-  const { currentTheme } = useContext(ThemeContext);
+  // Using context for theme-aware styling if needed in the future
+  useContext(ThemeContext);
   const [formData, setFormData] = useState({
-    name: '',
+    fullName: '',
     email: '',
     subject: '',
     message: ''
@@ -19,24 +21,74 @@ const Contact = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // This would be replaced with an actual API call later
-    setFormStatus('success');
-    // Reset form after submission
-    setTimeout(() => {
-      setFormData({
-        name: '',
-        email: '',
-        subject: '',
-        message: ''
+    
+    // Client-side validation
+    if (!formData.fullName.trim() || !formData.email.trim() || !formData.subject.trim() || !formData.message.trim()) {
+      toast.error('Please fill in all required fields.');
+      return;
+    }
+
+    setFormStatus('submitting'); // Add loading state
+    console.log('Contact Form submitted:', formData);
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/api/contact`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
       });
-      setFormStatus(null);
-    }, 3000);
+
+      const data = await response.json();
+      console.log('Form submission response:', data);
+
+      if (!response.ok) {
+        // Server returned an error response
+        const errorMessage = data.error || data.message || 'Server error occurred';
+        console.error('Server error:', errorMessage);
+        toast.error(errorMessage);
+        setFormStatus('error');
+        return;
+      }
+
+      // Success case
+      toast.success('Message sent successfully!');
+      setFormStatus('success');
+      
+      // Reset form after successful submission
+      setTimeout(() => {
+        setFormData({
+          fullName: '',
+          email: '',
+          subject: '',
+          message: ''
+        });
+        setFormStatus(null);
+      }, 3000);
+
+    } catch (error) {
+      console.error('Network error submitting form:', error);
+      toast.error('Failed to send message. Please check your connection and try again.');
+      setFormStatus('error');
+    }
   };
 
   return (
     <section id="contact" className="py-20 bg-white dark:bg-gray-900 transition-colors duration-300">
+      {/* Toast notifications */}
+      <Toaster 
+        position="top-center" 
+        toastOptions={{ 
+          duration: 4000,
+          style: {
+            zIndex: 10000,
+            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)'
+          }
+        }} 
+      />
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
@@ -52,7 +104,8 @@ const Contact = () => {
             <div className="p-8 bg-primary text-white">
               <h3 className="text-2xl font-bold mb-6">Contact Information</h3>
               <div className="space-y-6">
-                <div className="flex items-start">
+                  {/* address */}
+                {/* <div className="flex items-start">
                   <div className="mr-4">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -63,7 +116,7 @@ const Contact = () => {
                     <h4 className="font-semibold">Address</h4>
                     <p className="mt-1">123 Business Avenue, Tech City, TC 12345</p>
                   </div>
-                </div>
+                </div> */}
                 <div className="flex items-start">
                   <div className="mr-4">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -72,7 +125,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <h4 className="font-semibold">Email</h4>
-                    <p className="mt-1">info@stagifys.com</p>
+                    <p className="mt-1">contact@stagify.tech</p>
                   </div>
                 </div>
                 <div className="flex items-start">
@@ -83,11 +136,12 @@ const Contact = () => {
                   </div>
                   <div>
                     <h4 className="font-semibold">Phone</h4>
-                    <p className="mt-1">(123) 456-7890</p>
+                    <p className="mt-1">+(367) 077-68045</p>
                   </div>
                 </div>
               </div>
-              <div className="mt-12">
+              {/* connect with us */}
+              {/* <div className="mt-12">
                 <h4 className="font-semibold mb-4">Connect with us</h4>
                 <div className="flex space-x-4">
                   <a href="#" className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center hover:bg-white/30 transition-colors">
@@ -106,22 +160,22 @@ const Contact = () => {
                     </svg>
                   </a>
                 </div>
-              </div>
+              </div> */}
             </div>
             <div className="p-8">
               <h3 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Send us a message</h3>
               <form onSubmit={handleSubmit} className="space-y-6 glass-effect p-4 rounded-lg">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-slate-700 dark:text-gray-300 mb-2">Full Name</label>
+                  <label htmlFor="fullName" className="block text-sm font-medium text-slate-700 dark:text-gray-300 mb-2">Full Name</label>
                   <div className="relative">
                     <input
                       type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
+                      id="fullName"
+                      name="fullName"
+                      value={formData.fullName}
                       onChange={handleChange}
                       className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white shadow-sm"
-                      placeholder="Your name"
+                      placeholder="Your full name"
                       required
                     />
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -183,13 +237,37 @@ const Contact = () => {
                 <div>
                   <button
                     type="submit"
-                    className="w-full btn-primary py-3 px-6 rounded-lg text-lg font-semibold"
+                    disabled={formStatus === 'submitting'}
+                    className={`w-full py-3 px-6 rounded-lg text-lg font-semibold transition-all duration-300 ${
+                      formStatus === 'submitting' 
+                        ? 'bg-gray-400 cursor-not-allowed' 
+                        : formStatus === 'success'
+                        ? 'bg-green-600 hover:bg-green-700'
+                        : 'btn-primary'
+                    }`}
                   >
-                    {formStatus === 'success' ? 'Message Sent! ✓' : 'Send Message'}
+                    {formStatus === 'submitting' ? (
+                      <span className="flex items-center justify-center">
+                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Sending...
+                      </span>
+                    ) : formStatus === 'success' ? (
+                      'Message Sent! ✓'
+                    ) : (
+                      'Send Message'
+                    )}
                   </button>
                   {formStatus === 'success' && (
                     <div className="mt-4 p-3 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-lg text-center">
                       Thank you for your message! We'll get back to you soon.
+                    </div>
+                  )}
+                  {formStatus === 'error' && (
+                    <div className="mt-4 p-3 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 rounded-lg text-center">
+                      There was an error sending your message. Please check the details and try again.
                     </div>
                   )}
                 </div>

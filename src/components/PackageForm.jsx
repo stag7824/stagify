@@ -26,6 +26,7 @@ const PackageForm = ({ packageData, onClose, onSubmit }) => {
     email: '',
     phone: '',
     company: '',
+    packageName: packageData?.name || '',
     projectDescription: '',
     budget: packageData?.price || '',
     timeline: '',
