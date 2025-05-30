@@ -263,6 +263,20 @@
   ::-webkit-scrollbar-thumb {
     @apply bg-gradient-to-b from-primary to-purple-600 rounded-full;
   }
+
+  /* Offer banner animation */
+  @keyframes pulse-subtle {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.95;
+    }
+  }
+
+  .animate-pulse-subtle {
+    animation: pulse-subtle 3s ease-in-out infinite;
+  }
 }
 
 @layer components {
@@ -553,4 +567,17 @@
   50% {
     box-shadow: 0 0 30px 5px rgba(59, 130, 246, 0.7);
   }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.95;
+  }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 3s ease-in-out infinite;
 }

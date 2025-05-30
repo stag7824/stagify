@@ -5,6 +5,9 @@ const Header = () => {
   const { currentTheme, setCurrentTheme, themes, effectiveTheme, SYSTEM_THEME, isSystemTheme } = useContext(ThemeContext);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
+  // Check if banner should be shown
+  const showBanner = import.meta.env.VITE_SHOW_BANNER === 'true';
+  
   // Close mobile menu when resizing to desktop
   useEffect(() => {
     const handleResize = () => {
@@ -18,7 +21,7 @@ const Header = () => {
   }, [mobileMenuOpen]);
 
   return (
-    <header className="sticky top-0 z-50 bg-white dark:bg-gray-900 shadow-md transition-colors duration-300">
+    <header className={`sticky ${showBanner ? 'top-16' : 'top-0'} z-40 bg-white dark:bg-gray-900 shadow-md transition-colors duration-300`}>
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <div className="flex items-center space-x-1">
           <img src="/stagify-logo.svg" alt="Stagify Logo" className="h-8 w-8" />

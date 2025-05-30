@@ -8,6 +8,17 @@ const Packages = () => {
   const [hoveredPackage, setHoveredPackage] = useState(null);
   const [selectedPackage, setSelectedPackage] = useState(null);
 
+  // Check if slashed prices should be shown
+  const showSlashedPrices = import.meta.env.VITE_SHOW_SLASHED_PRICES === 'true';
+
+  // Helper function to calculate original price (double the current price)
+  // This shows the "before discount" price to emphasize the 50% savings
+  const getOriginalPrice = (currentPrice) => {
+    const price = currentPrice.replace('$', '').replace(',', '');
+    const doubledPrice = parseInt(price) * 2;
+    return doubledPrice.toLocaleString();
+  };
+
   const packages = [
     {
       id: 'starter',
@@ -116,8 +127,25 @@ const Packages = () => {
                 <p className="text-gray-600 dark:text-gray-400 mb-6 min-h-[4rem]">{pkg.description}</p>
                 
                 <div className="mb-6">
-                  <span className="text-4xl font-bold text-gray-900 dark:text-white">{pkg.price}</span>
-                  {pkg.id !== 'enterprise' && <span className="text-gray-500 dark:text-gray-400 ml-2">one-time</span>}
+                  {showSlashedPrices ? (
+                    <div className="space-y-1">
+                      <div className="text-lg text-gray-500 dark:text-gray-400 line-through">
+                        ${getOriginalPrice(pkg.price)}
+                      </div>
+                      <div className="flex items-baseline">
+                        <span className="text-4xl font-bold text-primary">{pkg.price}</span>
+                        {pkg.id !== 'enterprise' && <span className="text-gray-500 dark:text-gray-400 ml-2">one-time</span>}
+                      </div>
+                      <div className="text-sm text-green-600 dark:text-green-400 font-semibold">
+                        50% OFF Limited Time!
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <span className="text-4xl font-bold text-gray-900 dark:text-white">{pkg.price}</span>
+                      {pkg.id !== 'enterprise' && <span className="text-gray-500 dark:text-gray-400 ml-2">one-time</span>}
+                    </>
+                  )}
                 </div>
                 
                 <ul className="space-y-3 mb-8">
