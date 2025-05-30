@@ -13,7 +13,7 @@ const Packages = () => {
       id: 'starter',
       name: 'Starter Plan',
       description: 'Best for small businesses and startups launching online for the first time.',
-      price: '$1,499',
+      price: `$${import.meta.env.VITE_BASIC_PRICE || '1,499'}`,
       features: [
         'Mobile-friendly website that looks great on any device',
         'Up to 5 pages of custom content',
@@ -21,6 +21,8 @@ const Packages = () => {
         'Contact form so visitors can easily reach you',
         'Optimization for fast loading on mobile devices',
         '1 month of technical support after launch',
+        'Free Hosting of the website for a year',
+
       ],
       cta: 'Get Started',
       popular: false,
@@ -30,7 +32,7 @@ const Packages = () => {
       id: 'professional',
       name: 'Professional Plan',
       description: 'Comprehensive solution for growing businesses that need more features and functionality.',
-      price: '$3,999',
+      price: `$${import.meta.env.VITE_PROFESSIONAL_PRICE || '2,999'}`,
       features: [
         'Custom interactive website with advanced features',
         'Works offline and loads fast like a mobile app',
@@ -49,7 +51,7 @@ const Packages = () => {
       id: 'enterprise',
       name: 'Enterprise Plan',
       description: 'Full-scale digital transformation with both website and mobile apps for maximum reach.',
-      price: '$8,999+',
+      price: `$${import.meta.env.VITE_ENTERPRISE_PRICE || '8,999'}`,
       features: [
         'Custom website and mobile apps working together',
         'Apps for both iPhone and Android devices',
