@@ -16,7 +16,8 @@ const Packages = () => {
   const getOriginalPrice = (currentPrice) => {
     const price = currentPrice.replace('$', '').replace(',', '');
     const doubledPrice = parseInt(price) * 2;
-    return doubledPrice.toLocaleString();
+    const doublePricePlusTwo = doubledPrice + 2; // Add 2 to the doubled price for display
+    return doublePricePlusTwo.toLocaleString();
   };
 
   const packages = [
