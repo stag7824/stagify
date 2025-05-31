@@ -1,7 +1,7 @@
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { ThemeContext } from '../context/ThemeContext';
 
-// Import portfolio images
+// Import portfolio images - desktop versions
 import portfolio1 from '../assets/images/1.png';
 import portfolio2 from '../assets/images/2.png';
 import portfolio3 from '../assets/images/3.png';
@@ -10,6 +10,15 @@ import portfolio5 from '../assets/images/5.png';
 import portfolio6 from '../assets/images/6.png';
 import portfolio7 from '../assets/images/7.png';
 
+// Import mobile-optimized versions
+import portfolio1Mobile from '../assets/images/mobile/1.png';
+import portfolio2Mobile from '../assets/images/mobile/2.png';
+import portfolio3Mobile from '../assets/images/mobile/3.png';
+import portfolio4Mobile from '../assets/images/mobile/4.png';
+import portfolio5Mobile from '../assets/images/mobile/5.png';
+import portfolio6Mobile from '../assets/images/mobile/6.png';
+import portfolio7Mobile from '../assets/images/mobile/7.png';
+
 const Hero = () => {
   // Using context for theme-aware styling if needed in the future
   useContext(ThemeContext);
@@ -17,52 +26,91 @@ const Hero = () => {
   
   // Portfolio slideshow state
   const [currentSlide, setCurrentSlide] = useState(0);
-  
+  const [imageLoadingErrors, setImageLoadingErrors] = useState(new Set());
+  const [imagesLoaded, setImagesLoaded] = useState(new Set());
+  const [isMobileView, setIsMobileView] = useState(false);
+
+  // Check mobile view on component mount and window resize
+  useEffect(() => {
+    const checkMobile = () => {
+      const mobile = window.innerWidth <= 768 || 
+                    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      setIsMobileView(mobile);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    // Critical: Also listen for orientation change on mobile devices
+    window.addEventListener('orientationchange', checkMobile);
+    return () => {
+      window.removeEventListener('resize', checkMobile);
+      window.removeEventListener('orientationchange', checkMobile);
+    };
+  }, []);
+
+  // Helper functions for image handling
+  const handleImageLoad = (index) => {
+    setImagesLoaded(prev => new Set([...prev, index]));
+  };
+
+  const handleImageError = (index) => {
+    console.warn(`Failed to load image ${index + 1}`, { isMobileView, image: portfolioItems[index]?.image });
+    setImageLoadingErrors(prev => new Set([...prev, index]));
+  };
+
   // Portfolio data with compelling descriptions for non-IT clients
-  const portfolioItems = [
-    {
-      image: portfolio1,
-      title: "Modern E-Commerce Store",
-      description: "Boosted client sales by 300% with mobile-first design",
-      tags: ["E-Commerce", "Mobile"]
-    },
-    {
-      image: portfolio2,
-      title: "Professional Business Website",
-      description: "Increased customer inquiries by 250% in 3 months",
-      tags: ["Business", "SEO"]
-    },
-    {
-      image: portfolio3,
-      title: "Restaurant Online Ordering",
-      description: "Generated $50K+ monthly revenue through online orders",
-      tags: ["Restaurant", "Orders"]
-    },
-    {
-      image: portfolio4,
-      title: "Real Estate Platform",
-      description: "Sold 40% more properties with virtual tours",
-      tags: ["Real Estate", "Virtual Tours"]
-    },
-    {
-      image: portfolio5,
-      title: "Healthcare Portal",
-      description: "Reduced appointment no-shows by 60%",
-      tags: ["Healthcare", "Booking"]
-    },
-    {
-      image: portfolio6,
-      title: "Corporate Dashboard",
-      description: "Streamlined operations saving 20 hours/week",
-      tags: ["Corporate", "Efficiency"]
-    },
-    {
-      image: portfolio7,
-      title: "Mobile App Interface",
-      description: "Achieved 4.8★ rating with 50K+ downloads",
-      tags: ["Mobile App", "UX"]
-    }
-  ];
+  // Using useMemo to avoid circular dependency and re-compute when isMobileView changes
+  const portfolioItems = useMemo(() => {
+    // Helper function to get appropriate image source based on device
+    const getImageSource = (desktopImg, mobileImg) => {
+      return isMobileView ? mobileImg : desktopImg;
+    };
+
+    return [
+      {
+        image: getImageSource(portfolio1, portfolio1Mobile),
+        title: "Modern E-Commerce Store",
+        description: "Boosted client sales by 300% with mobile-first design",
+        tags: ["E-Commerce", "Mobile"]
+      },
+      {
+        image: getImageSource(portfolio2, portfolio2Mobile),
+        title: "Professional Business Website",
+        description: "Increased customer inquiries by 250% in 3 months",
+        tags: ["Business", "SEO"]
+      },
+      {
+        image: getImageSource(portfolio3, portfolio3Mobile),
+        title: "Restaurant Online Ordering",
+        description: "Generated $50K+ monthly revenue through online orders",
+        tags: ["Restaurant", "Orders"]
+      },
+      {
+        image: getImageSource(portfolio4, portfolio4Mobile),
+        title: "Real Estate Platform",
+        description: "Sold 40% more properties with virtual tours",
+        tags: ["Real Estate", "Virtual Tours"]
+      },
+      {
+        image: getImageSource(portfolio5, portfolio5Mobile),
+        title: "Healthcare Portal",
+        description: "Reduced appointment no-shows by 60%",
+        tags: ["Healthcare", "Booking"]
+      },
+      {
+        image: getImageSource(portfolio6, portfolio6Mobile),
+        title: "Corporate Dashboard",
+        description: "Streamlined operations saving 20 hours/week",
+        tags: ["Corporate", "Efficiency"]
+      },
+      {
+        image: getImageSource(portfolio7, portfolio7Mobile),
+        title: "Mobile App Interface",
+        description: "Achieved 4.8★ rating with 50K+ downloads",
+        tags: ["Mobile App", "UX"]
+      }
+    ];
+  }, [isMobileView]);
 
   // Auto-advance slideshow
   useEffect(() => {
@@ -72,6 +120,68 @@ const Hero = () => {
 
     return () => clearInterval(interval);
   }, [portfolioItems.length]);
+
+  // Force slideshow visibility on mobile after component mounts
+  useEffect(() => {
+    if (isMobileView) {
+      const timer = setTimeout(() => {
+        const slideshowElement = document.querySelector('.hero-slideshow');
+        if (slideshowElement) {
+          slideshowElement.style.display = 'block';
+          slideshowElement.style.visibility = 'visible';
+          slideshowElement.style.height = '300px';
+          slideshowElement.style.minHeight = '300px';
+        }
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [isMobileView]);
+
+  // Critical: Ensure slideshow is initialized and visible after portfolio items load
+  useEffect(() => {
+    if (portfolioItems.length > 0) {
+      const timer = setTimeout(() => {
+        const slideshowElement = document.querySelector('.hero-slideshow');
+        if (slideshowElement) {
+          // Ensure slideshow is visible
+          slideshowElement.style.opacity = '1';
+          slideshowElement.style.visibility = 'visible';
+          slideshowElement.style.display = 'block';
+          
+          // Ensure current slide is visible
+          const currentSlideElement = slideshowElement.children[currentSlide];
+          if (currentSlideElement) {
+            currentSlideElement.style.opacity = '1';
+          }
+
+          // Critical: Trigger reflow to ensure proper rendering
+          slideshowElement.offsetHeight; // Force reflow
+        }
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [portfolioItems.length, currentSlide, isMobileView]); // Added isMobileView dependency
+
+  // Preload next image on mobile for smoother transitions
+  useEffect(() => {
+    if (isMobileView && portfolioItems.length > 0) {
+      const nextIndex = (currentSlide + 1) % portfolioItems.length;
+      const nextImage = new Image();
+      nextImage.src = portfolioItems[nextIndex].image;
+    }
+  }, [currentSlide, isMobileView, portfolioItems]);
+
+  // Critical: Preload first image immediately when component mounts
+  useEffect(() => {
+    if (portfolioItems.length > 0) {
+      const firstImage = new Image();
+      firstImage.src = portfolioItems[0].image;
+      firstImage.onload = () => {
+        // Mark first image as loaded
+        setImagesLoaded(prev => new Set([...prev, 0]));
+      };
+    }
+  }, [portfolioItems]);
   
   useEffect(() => {
     const handleMouseMove = (e) => {
@@ -108,7 +218,7 @@ const Hero = () => {
       
       <div className="container mx-auto px-4 relative z-10">
         <div className="flex flex-col md:flex-row items-center justify-between">
-          <div className="md:w-1/2 mb-10 md:mb-0">
+          <div className="w-full md:w-1/2 mb-10 md:mb-0">
             <div className="relative">
               <div className="absolute -left-6 -top-6 w-20 h-20 bg-primary/20 rounded-full filter blur-xl animate-pulse-slow"></div>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 text-gray-900 dark:text-white relative">
@@ -151,11 +261,24 @@ const Hero = () => {
             </div>
           </div>
           
-          <div className="md:w-1/2 relative">
+          <div className="w-full md:w-1/2 relative">
             <div className="cyber-border">
               <div className="relative z-10 rounded-xl shadow-2xl overflow-hidden transform transition-all duration-500 hover:scale-[1.02] group">
                 {/* Portfolio Slideshow */}
-                <div className="relative h-96 bg-gray-100 dark:bg-gray-800">
+                <div 
+                  className="hero-slideshow relative h-96 min-h-[300px] bg-gray-100 dark:bg-gray-800"
+                  style={{
+                    width: '100%',
+                    height: isMobileView ? '300px' : '384px',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    display: 'block',
+                    visibility: 'visible',
+                    // Force visibility and ensure proper rendering
+                    minHeight: isMobileView ? '300px' : '384px',
+                    backgroundColor: isMobileView ? '#f3f4f6' : undefined
+                  }}
+                >
                   {portfolioItems.map((item, index) => (
                     <div
                       key={index}
@@ -163,11 +286,54 @@ const Hero = () => {
                         index === currentSlide ? 'opacity-100' : 'opacity-0'
                       }`}
                     >
-                      <img 
-                        src={item.image} 
-                        alt={item.title}
-                        className="w-full h-full object-cover"
-                      />
+                      {imageLoadingErrors.has(index) ? (
+                        // Fallback content when image fails to load
+                        <div className="w-full h-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
+                          <div className="text-center p-8">
+                            <div className="w-16 h-16 bg-primary/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                              <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                              </svg>
+                            </div>
+                            <h3 className="text-white font-bold text-lg mb-2">{item.title}</h3>
+                            <p className="text-gray-300 text-sm mb-2">{item.description}</p>
+                            {isMobileView && (
+                              <p className="text-gray-400 text-xs">
+                                🏠 View full gallery on desktop
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                      ) : (
+                        <>
+                          <img 
+                            src={item.image} 
+                            alt={item.title}
+                            className="w-full h-full object-cover"
+                            loading={index === 0 ? "eager" : "lazy"}
+                            onLoad={() => handleImageLoad(index)}
+                            onError={() => handleImageError(index)}
+                            style={{
+                              // Optimize for mobile loading
+                              maxWidth: '100%',
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'cover',
+                              display: 'block',
+                              position: 'absolute',
+                              top: 0,
+                              left: 0
+                            }}
+                            // Critical: Priority loading for first image, async for others
+                            decoding="async"
+                            fetchpriority={index === 0 ? "high" : "low"}
+                          />
+                          {/* Loading indicator */}
+                          {!imagesLoaded.has(index) && !imageLoadingErrors.has(index) && (
+                            <div className="absolute inset-0 bg-gray-200 dark:bg-gray-700 image-loading"></div>
+                          )}
+                        </>
+                      )}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end">
                         <div className="p-6 w-full">
                           <div className="flex justify-between items-start">

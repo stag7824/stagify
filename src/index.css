@@ -581,3 +581,119 @@
 .animate-pulse-subtle {
   animation: pulse-subtle 3s ease-in-out infinite;
 }
+
+/* Mobile optimizations for Hero slideshow */
+@media (max-width: 768px) {
+  .hero-slideshow {
+    min-height: 300px !important;
+    height: 300px !important;
+    contain: layout style paint;
+    position: relative !important;
+    display: block !important;
+    overflow: hidden !important;
+    background-color: #f3f4f6 !important;
+    border-radius: 0.5rem !important;
+  }
+  
+  .dark .hero-slideshow {
+    background-color: #1f2937 !important;
+  }
+  
+  .hero-slideshow img {
+    transform: translateZ(0);
+    will-change: transform;
+    backface-visibility: hidden;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    display: block !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+  }
+  
+  /* Ensure slideshow container is visible on mobile */
+  .hero-slideshow > div {
+    width: 100% !important;
+    height: 100% !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+  }
+  
+  /* Force visibility of slideshow */
+  .hero-slideshow,
+  .hero-slideshow * {
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  
+  /* Override any potential hiding styles */
+  .hero-slideshow .opacity-0 {
+    opacity: 0 !important;
+  }
+  
+  .hero-slideshow .opacity-100 {
+    opacity: 1 !important;
+  }
+  
+  /* Reduce animations on mobile for better performance */
+  .animate-float,
+  .animate-float-slow,
+  .animate-float-fast {
+    animation: none;
+  }
+  
+  /* Optimize parallax elements for mobile */
+  .parallax-element {
+    transform: none !important;
+  }
+  
+  /* Reduce blur effects on mobile */
+  .filter.blur-3xl {
+    filter: blur(20px) !important;
+  }
+  
+  .filter.blur-2xl {
+    filter: blur(15px) !important;
+  }
+  
+  /* Mobile-specific slideshow controls */
+  .hero-slideshow .absolute.bottom-4 {
+    bottom: 8px !important;
+    z-index: 10 !important;
+  }
+  
+  .hero-slideshow button {
+    z-index: 10 !important;
+  }
+  
+  /* Ensure mobile images load properly */
+  .hero-slideshow .image-loading {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+}
+
+/* Image loading optimizations */
+img[loading="lazy"] {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 400px;
+}
+
+/* Progressive image loading */
+.image-loading {
+  background: linear-gradient(90deg, #f0f0f0 25%, transparent 37%, #f0f0f0 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: -100% 50%;
+  }
+}
