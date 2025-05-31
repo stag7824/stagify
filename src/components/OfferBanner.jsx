@@ -44,7 +44,7 @@ const OfferBanner = () => {
               <span className="font-medium">🚀 Get Your Business Online Today - </span>
               <span className="font-bold">50% OFF Professional Websites!</span>
               <span className="ml-2 bg-yellow-400 text-red-600 px-2 py-1 rounded-full text-xs font-bold">
-                SAVE $1,250+
+                SAVE $750+
               </span>
             </div>
             <div className="md:hidden text-xs">
