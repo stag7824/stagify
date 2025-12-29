@@ -4,7 +4,7 @@ export const termsAndConditions = [
   {
     id: 1,
     title: 'Services',
-    content: 'Stagify\'s will provide the client with web and/or app development services as outlined in the package selected and any additional requirements specified by the client.'
+    content: 'Bugbrew will provide the client with web and/or app development services as outlined in the package selected and any additional requirements specified by the client.'
   },
   {
     id: 2,
@@ -29,7 +29,7 @@ export const termsAndConditions = [
   {
     id: 6,
     title: 'Confidentiality',
-    content: 'Stagify\'s agrees to keep all client information confidential and not disclose it to third parties without explicit permission.'
+    content: 'Bugbrew agrees to keep all client information confidential and not disclose it to third parties without explicit permission.'
   },
   {
     id: 7,
@@ -44,12 +44,12 @@ export const termsAndConditions = [
   {
     id: 9,
     title: 'Liability',
-    content: 'Stagify\'s is not liable for any damages arising from the use or inability to use the delivered products. The client is responsible for ensuring the content provided does not infringe on any third-party rights.'
+    content: 'Bugbrew is not liable for any damages arising from the use or inability to use the delivered products. The client is responsible for ensuring the content provided does not infringe on any third-party rights.'
   },
   {
     id: 10,
     title: 'Governing Law',
-    content: 'This agreement is governed by the laws of the jurisdiction where Stagify\'s is registered. Any disputes shall be resolved through arbitration before pursuing legal action.'
+    content: 'This agreement is governed by the laws of the jurisdiction where Bugbrew is registered. Any disputes shall be resolved through arbitration before pursuing legal action.'
   }
 ];
 

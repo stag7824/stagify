@@ -69,7 +69,7 @@ function App() {
           <footer className="bg-gray-900 dark:bg-gray-950 text-white py-8">
             <div className="container mx-auto px-4 text-center">
               <p>
-                &copy; {new Date().getFullYear()} Stagify. All rights reserved.
+                &copy; {new Date().getFullYear()} Bugbrew. All rights reserved.
               </p>
               <p className="mt-2 text-gray-400 text-sm">
                 Turning your ideas into high-impact digital solutions

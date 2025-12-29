@@ -14,7 +14,7 @@
   <!-- Main Circle -->
   <circle cx="100" cy="100" r="90" fill="url(#bgGradient)" />
   
-  <!-- Stagify Icon - Representing stages/layers -->
+  <!-- Bugbrew Icon - Representing stages/layers -->
   <g>
     <!-- Bottom layer/stage -->
     <path d="M60,130 L140,130 L130,150 L70,150 Z" fill="#ffffff" opacity="0.7" />

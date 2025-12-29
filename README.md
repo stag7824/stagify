@@ -1,4 +1,4 @@
-# Stagify - Web & App Development Services
+# Bugbrew - Web & App Development Services
 
 A modern, responsive web application built with React and Vite, showcasing web and app development services with dynamic theming support and PWA capabilities.
 
