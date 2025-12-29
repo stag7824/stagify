@@ -34,21 +34,26 @@ const Contact = () => {
     console.log('Contact Form submitted:', formData);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_API_URL}/api/contact`, {
+      const ntfyUrl = 'https://ntfy.bugbrewery.tech/bugbrew';
+
+      // Build a plain-text payload summarizing the form submission
+      const payload = `Name: ${formData.fullName}\nEmail: ${formData.email}\nSubject: ${formData.subject}\n\n${formData.message}`;
+
+      const response = await fetch(ntfyUrl, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'text/plain; charset=utf-8',
+          'Title': formData.subject || 'New contact message'
         },
-        body: JSON.stringify(formData)
+        body: payload
       });
 
-      const data = await response.json();
-      console.log('Form submission response:', data);
+      console.log('ntfy response status:', response.status);
 
       if (!response.ok) {
-        // Server returned an error response
-        const errorMessage = data.error || data.message || 'Server error occurred';
-        console.error('Server error:', errorMessage);
+        const text = await response.text().catch(() => null);
+        const errorMessage = text || `Notification failed with status ${response.status}`;
+        console.error('Notification error:', errorMessage);
         toast.error(errorMessage);
         setFormStatus('error');
         return;
@@ -57,7 +62,7 @@ const Contact = () => {
       // Success case
       toast.success('Message sent successfully!');
       setFormStatus('success');
-      
+
       // Reset form after successful submission
       setTimeout(() => {
         setFormData({
