@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Sitemap: https://bugbrew.tech/sitemap.xml
+# If you need to block any paths, list them with Disallow:
+# Disallow: /private
